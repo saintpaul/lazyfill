@@ -98,7 +98,10 @@ var Utils = {
   appendCss: function( stylesheet ) {
     var css = document.createElement( 'style' );
     css.type = 'text/css';
-    css.innerHTML = stylesheet;
+    if( css.styleSheet && !css.sheet )
+      css.styleSheet.cssText = stylesheet;
+    else
+      css.appendChild( document.createTextNode( stylesheet ) );
 
     document.getElementsByTagName('head')[0].appendChild( css );
   }
@@ -137,7 +140,7 @@ Utils.contains = document.documentElement.compareDocumentPosition ?
  * Find a media query match starting from the last one.
  * @private
  */
-Utils.matchMediaQueries = ( window.matchMedia !== void 0 ) ?
+Utils.matchMediaQueries = ( window.matchMedia === void 0 ) ?
   function( mediaQueries ) {
     return mediaQueries.length > 0 ? mediaQueries.length - 1 : 0;
   } :
