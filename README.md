@@ -2,7 +2,8 @@
 
 LazyFill is a JavaScript library allowing responsive lazy loading of components in a page.
 
-The core reason of this library is to provide with a standard way of lazy loading any type of object on a web page. The source of each object can be selected using media queries to cater to Responsive Design needs.
+The core reason of this library is to provide with a standard way of lazy loading any type of object on a web page.
+The source of each object is selected using media queries to cater to Responsive Design needs.
 
 ## Features
 
@@ -30,15 +31,20 @@ The core reason of this library is to provide with a standard way of lazy loadin
 ### Common
 
 Each future component is placed on the page using a placeholder.
+Eager component are loaded after `DOMContentLoaded` and before `onload`. 
+Lazy components are loaded as soon as they might become visible on the screen.
 
-This placeholder will contain a list of attributes passed onto LazyFill modules.
+Media queries are evaluated from right to left, with the first matching being used.
 
-**defer: ** 
-Every component can receive a `defer` attribute. Deferred components will be always loaded after the `onload` event.
+List of placeholder attributes common to all modules:
 
-**media-queries: ** A component can override the page global media queries.
+- **sources:** the sources for each media queries
 
-**sources: ** the sources for each media queries
+- **media-queries:** A component can override the page global media queries.
+
+- **defer:** deferred components will be always loaded after the `onload` event.
+
+
 
 ### Images
  
@@ -49,20 +55,20 @@ In order ot reserve the space for the image ahead of when it will be effectively
 This list will be matched to the selected media query.
 
 
-**ratios: ** list of height to width ratios, for the different sources of the images
+**ratios:** list of height to width ratios, for the different sources of the images
 
 
 ### iframes
 
 Every iframe is deferred by default, be it eager or lazy, as to not block the onload event.
 
-**scrolling: ** `iframe` Element scrolling property
+**scrolling:** `iframe` Element scrolling property
  
-**frameborder: ** `iframe` Element frameborder property
+**frameborder:** `iframe` Element frameborder property
 
-**frame-width: ** `iframe` Element width property
+**frame-width:** `iframe` Element width property
 
-**frame-height: ** `iframe` Element height property
+**frame-height:** `iframe` Element height property
 
 ### HTML Snippet
 
@@ -76,11 +82,6 @@ As with any component, it can deferred as to be loaded after onload event.
 ## Examples
 
 ### Images
-
-```html
-<script src="lazyfill.min.js" data-media-queries="only all,(min-width: 768px),(min-width: 1025px)"></script>
-```
-
 
 ```html
 <div class="eager-responsive-image" alt="alt text"
