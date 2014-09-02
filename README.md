@@ -1,9 +1,10 @@
 # LazyFill
 
-LazyFill is a JavaScript library allowing responsive lazy loading of components in a page.
+Responsive Design is not `display: none`
 
-The core reason of this library is to provide with a standard way of lazy loading any type of object on a web page.
-The source of each object is selected using media queries to cater to Responsive Design needs.
+To this day, to many websites still default to simply hiding elements. While for small structural elements it doesn't have a big impact, the practice is really bad for rich contents.
+
+LazyFill is a JavaScript library allowing both for components to be loaded selectively depending on media queries, and lazily, that is as soon as the element is about to appear.
 
 ## Features
 
