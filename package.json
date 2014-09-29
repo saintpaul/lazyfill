@@ -1,7 +1,7 @@
 {
   "name": "LazyFill",
   "description": "A library allowing to lazy load any responsive components",
-  "version": "0.1.2",
+  "version": "0.1.3",
 
   "bugs": "https://github.com/saintpaul/lazyfill/issues",
 
