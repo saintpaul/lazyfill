@@ -39,7 +39,8 @@ var lazyOffset          = 500,        // Vertical offset in px. Used for preload
 var plugins = [
   require( './plugins/Image.js' ),
   require( './plugins/Iframe.js' ),
-  require( './plugins/HtmlSnippet.js' )
+  require( './plugins/HtmlSnippet.js' ),
+  require( './plugins/HtmlUncomment.js' )
 ];
 
 var Component = require( './Component.js' );

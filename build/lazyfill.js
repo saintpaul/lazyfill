@@ -81,7 +81,8 @@ var lazyOffset          = 500,        // Vertical offset in px. Used for preload
 var plugins = [
   require( './plugins/Image.js' ),
   require( './plugins/Iframe.js' ),
-  require( './plugins/HtmlSnippet.js' )
+  require( './plugins/HtmlSnippet.js' ),
+  require( './plugins/HtmlUncomment.js' )
 ];
 
 var Component = require( './Component.js' );
@@ -341,7 +342,7 @@ var LazyFill = {
 
 window.LazyFill = LazyFill;
 
-},{"./Component.js":1,"./Utils.js":4,"./plugins/HtmlSnippet.js":5,"./plugins/Iframe.js":6,"./plugins/Image.js":7}],3:[function(require,module,exports){
+},{"./Component.js":1,"./Utils.js":4,"./plugins/HtmlSnippet.js":5,"./plugins/HtmlUncomment.js":6,"./plugins/Iframe.js":7,"./plugins/Image.js":8}],3:[function(require,module,exports){
 'use strict';
 
 var Utils = require( './Utils.js' );
@@ -668,6 +669,69 @@ module.exports = HtmlSnippetModule;
 
 },{"../ModuleBase.js":3}],6:[function(require,module,exports){
 'use strict';
+
+var ModuleBase = require( '../ModuleBase.js' );
+
+
+/**
+ * Globally evaluates a JavaScript code.
+ * @param  {String} code JS source code to evaluate
+ *
+ * @private
+ */
+function globalEval( code ) {
+  var script = document.createElement( 'script' );
+  script.text = code;
+  document.getElementsByTagName('head')[0].appendChild( script ).parentNode.removeChild( script );
+}
+
+
+
+/**
+ * @class HtmlUncommentModule
+ */
+var HtmlUncommentModule = {
+  /**
+   *
+   * @param {Component} component           the Component object representing the element
+
+   * @return {Function} the new handler
+   */
+  show: function( component )
+  {
+    var placeholder = component.element;
+    placeholder.innerHTML = placeholder.innerHTML.replace( '<!--', '' ).replace( '-->', '' );
+    var scripts = placeholder.querySelectorAll( 'script' );
+
+    // scripts aren't evaluated when inserted with innerHTML.
+    for (var i = 0; i < scripts.length; i++) {
+      globalEval( scripts[i].innerHTML );
+    }
+
+    return void 0;
+  },
+
+
+  /**
+   * No processing.
+   * @return {Function} the new handler
+   */
+  process: function()
+  {
+    return HtmlUncommentModule.show;
+  },
+
+  eagerSelector:  '.eager-html-uncomment',
+
+  lazySelector:   '.lazy-html-uncomment'
+
+};
+
+
+module.exports = HtmlUncommentModule;
+
+},{"../ModuleBase.js":3}],7:[function(require,module,exports){
+'use strict';
 var ModuleBase        = require( '../ModuleBase.js' );
 
 
@@ -744,7 +808,7 @@ var IframeModule = {
 
 module.exports = IframeModule;
 
-},{"../ModuleBase.js":3}],7:[function(require,module,exports){
+},{"../ModuleBase.js":3}],8:[function(require,module,exports){
 'use strict';
 
 var ModuleBase   = require( '../ModuleBase.js' );
