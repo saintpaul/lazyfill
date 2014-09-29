@@ -65,7 +65,6 @@ function loadComponent( component ) {
 
 
 /**
- * Shows up the deferred components.
  * @private
  */
 function showDeferredComponents()
@@ -79,15 +78,17 @@ function showDeferredComponents()
 }
 
 
-
 /**
- * Installs a plugin
+ * Discover every components inside an element.
+ * Deferred component will be loaded after the onload event.
+ * CSS class used for discovery is removed to avoid them being processed a second time.
+ *
  * @param  {DOMElement}     element the dom element to parse
  * @param  {LazyFillPlugin} plugin  the one to install
  *
  * @private
  */
-function processComponentsWithPlugin( element, plugin ) {
+function discoverComponentsWithPlugin( element, plugin ) {
   // eager
   //
   var elements = element.querySelectorAll( plugin.eagerSelector );
@@ -96,6 +97,7 @@ function processComponentsWithPlugin( element, plugin ) {
   for( i = elements.length - 1; i >= 0; i-- ) {
     deferred = plugin.defer === true || elements[ i ].hasAttribute( 'data-defer' );
     component = new Component( elements[i], plugin.process, deferred );
+
     component.execHandler( currentMediaQuery );
     loadComponent( component );
   }
@@ -108,6 +110,7 @@ function processComponentsWithPlugin( element, plugin ) {
   for( i = elements.length - 1; i >= 0; i-- ) {
     deferred = plugin.defer === true || elements[ i ].hasAttribute( 'data-defer' );
     component = new Component( elements[i], plugin.process, deferred );
+
     component.execHandler( currentMediaQuery );
     lazyComponents.push( component );
   }
@@ -115,23 +118,19 @@ function processComponentsWithPlugin( element, plugin ) {
 
 
 /**
- * Processes a DOM Element to find any component inside it.
- *
  * @param  {DOMElement} element parent element of lazy components
  * @private
  */
-function _processComponents( element )
+function _discoverComponents( element )
 {
   for (var i = plugins.length - 1; i >= 0; i--) {
-    processComponentsWithPlugin( element, plugins[i] );
+    discoverComponentsWithPlugin( element, plugins[i] );
   }
 }
 
 
 
 /**
- * Shows a DOM element if it's about to be visible on the page
- *
  * @param  {Component}  component the component definition
  * @param  {Integer}    index     index of the component in the lazy loading registry
  * @return {Boolean}              whether the component has been displayed
@@ -155,10 +154,9 @@ function showIfVisible( component, index ) {
 
 
 /**
- * Displays all the other images on the page, AFTER the onload event, and lazily (if they're visible on the page)
  * @internal
  */
-function showComponents() {
+function showLazyComponents() {
   var allComponentsDone = true;
 
   for( var current = 0; current < lazyComponents.length; current++ ) {
@@ -201,7 +199,7 @@ function updateClientHeight()
 
 
 
-var showComponentsT     = Utils.throttle(showComponents, 20);
+var showLazyComponentsT     = Utils.throttle(showLazyComponents, 20);
 
 
 /**
@@ -216,14 +214,14 @@ function init() {
   }
 
   // initial match
-  Utils.matchMediaQueries( mediaQueries );
+  currentMediaQuery = Utils.matchMediaQueries( mediaQueries );
 
   // on mobile devices, the offset is roughly the same as the screen height, since a touch
   // scroll will most likely shift the whole page
   if( /Mobile|iP(hone|od|ad)|Android|BlackBerry|IEMobile/g.test( navigator.userAgent ) )
     lazyOffset = 1000;
 
-  _processComponents( document );
+  _discoverComponents( document );
 }
 
 
@@ -241,18 +239,18 @@ function onLoad() {
   // if page height changes (hiding elements at start)
   // we should recheck for new in viewport images that need to be shown
   // see onload test
-  showComponentsT();
+  showLazyComponentsT();
 
   // show the components once the browser gives us time to
-  requestAnimFrame( showComponentsT );
+  requestAnimFrame( showLazyComponentsT );
 }
 
 
 (function registerEvents() {
   Utils.domready( init );
   Utils.addEvent( window, 'load',   onLoad );
-  Utils.addEvent( window, 'scroll', showComponentsT);
-  Utils.addEvent( window, 'touchmove', showComponentsT);
+  Utils.addEvent( window, 'scroll', showLazyComponentsT);
+  Utils.addEvent( window, 'touchmove', showLazyComponentsT);
 
   if( window.matchMedia )
     Utils.addEvent( window, 'resize', Utils.throttle( resizeComponents, 20 ) );
@@ -266,15 +264,14 @@ function onLoad() {
  */
 var LazyFill = {
   /**
-   * API function exposed to the client page; processes the element and immediatly tries to load them.
-   * Basically, this should only be used after the complete load of a page.
+   * Discover the components and immediatly tries to load them.
    *
-   * @param  {DOMElement} element parent element of lazy components
+   * @param  {DOMElement} element   parent element of lazy components
    */
-  processComponents: function( element )
+  discoverComponents: function( element )
   {
-    _processComponents( element );
-    showComponentsT();
+    _discoverComponents( element );
+    showLazyComponentsT();
   },
 
 

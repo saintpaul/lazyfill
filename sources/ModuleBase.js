@@ -8,15 +8,27 @@ var Utils = require( './Utils.js' );
  * @type {Object}
  */
 var ModuleBase = {
+  /**
+   * @param  {DOMElement} element
+   * @param  {String}     className
+   */
+  removeClass: function( element, className ) {
+    element.className = element.className.replace( className.replace( '.', '' ), '' );
+  },
 
-  safeArrayGet: function( element, attribute, currentMediaQuery ) {
+  safeSplitArray: function( element, attribute, currentMediaQuery ) {
     var attr = element.getAttribute( attribute );
     if( attr === null ) return null;
 
     var array = attr.split( ',' );
     if( array.length === 0 ) return null;
 
-    return array[ Math.min( currentMediaQuery, array.length - 1 ) ];
+    return array;
+  },
+
+  safeArrayGet: function( element, attribute, currentMediaQuery ) {
+    var array = ModuleBase.safeSplitArray( element, attribute, currentMediaQuery );
+    return array === null ? null : array[ Math.min( currentMediaQuery, array.length - 1 ) ];
   },
 
 

@@ -28,11 +28,11 @@ function applyRatio( component, currentMediaQuery )
 (function init() {
 
   var css = '@charset "UTF-8";' +
-  '.eager-responsive-image.fluid, .lazy-responsive-image.fluid {' +
+  '.fluid, .fluid {' +
     'display: block;' +
     'position: relative;' +
   '}' +
-  '.eager-responsive-image.fluid img, .lazy-responsive-image.fluid img {' +
+  '.fluid img, .fluid img {' +
       'position: absolute;' +
       'top:0;' +
       'left:0;' +
@@ -94,17 +94,12 @@ var ImagePlugin = {
     applyRatio( component, currentMediaQuery );
 
     if( !component.imgElement ) {
-      var imgElement = placeholder.getElementsByTagName( 'img' )[ 0 ];
-      if( !imgElement ) {
-        var alt = placeholder.getAttribute( 'data-alt' );
-        imgElement = document.createElement( 'img' );
-        if( alt )
-          imgElement.alt = alt;
+      var alt = placeholder.getAttribute( 'data-alt' );
+      component.imgElement = document.createElement( 'img' );
 
-        placeholder.appendChild( imgElement );
-      }
+      if( alt ) component.imgElement.alt = alt;
 
-      component.imgElement = imgElement;
+      placeholder.appendChild( component.imgElement );
     }
 
     component.imgElement.src = newSource;
