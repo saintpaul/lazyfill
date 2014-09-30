@@ -13,11 +13,11 @@ var Utils = require( '../Utils.js' );
  *
  * Usage
  *   <div class="eager-html-uncomment" data-defer>
- *     <!--
- *       <code></code>
- *     -->
+ *     <!--LF[
+ *       <div></div>
+ *     ]FL-->
  *   </div>
-
+ *
  *   <div class="lazy-html-uncomment">
  *     <!--
  *       <code></code>
@@ -37,7 +37,7 @@ var HtmlUncommentModule = {
   show: function( component )
   {
     var placeholder = component.element;
-    placeholder.innerHTML = placeholder.innerHTML.replace( '<!--', '' ).replace( '-->', '' );
+    placeholder.innerHTML = placeholder.innerHTML.replace( '<!--LF[', '' ).replace( ']FL-->', '' );
     var scripts = placeholder.querySelectorAll( 'script' );
 
     // scripts aren't evaluated when inserted with innerHTML.
