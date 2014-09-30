@@ -32,7 +32,7 @@ Component.prototype.execHandler = function( currentMediaQuery ) {
  * The callbacks are executed only once, when the element is first loaded.
  */
 Component.prototype.execCallbackOnce = function() {
-  if( this.callback ) this.callback.call( null, this );
+  if( this.callback ) this.callback.call( null, this.element );
   this.callback = void 0;
 };
 
