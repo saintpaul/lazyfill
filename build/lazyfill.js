@@ -541,7 +541,8 @@ var Utils = {
   globalEvalJavascript: function( scriptNode ) {
     var script = document.createElement( 'script' );
     script.text = scriptNode.innerHTML;
-    script.src = scriptNode.src;
+
+    if( scriptNode.src )    script.src = scriptNode.src;
     script.async = scriptNode.async;
     document.getElementsByTagName('head')[0].appendChild( script ).parentNode.removeChild( script );
   }
