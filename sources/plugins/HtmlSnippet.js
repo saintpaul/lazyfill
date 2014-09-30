@@ -1,19 +1,7 @@
 'use strict';
 
 var ModuleBase = require( '../ModuleBase.js' );
-
-
-/**
- * Globally evaluates a JavaScript code.
- * @param  {String} code JS source code to evaluate
- *
- * @private
- */
-function globalEval( code ) {
-  var script = document.createElement( 'script' );
-  script.text = code;
-  document.getElementsByTagName('head')[0].appendChild( script ).parentNode.removeChild( script );
-}
+var Utils = require( '../Utils.js' );
 
 
 
@@ -52,7 +40,7 @@ var HtmlSnippetModule = {
 
         // scripts aren't evaluated when inserted with innerHTML.
         for (var i = 0; i < scripts.length; i++) {
-          globalEval( scripts[i].innerHTML );
+          Utils.globalEvalJavascript( scripts[i] );
         }
       }
     };

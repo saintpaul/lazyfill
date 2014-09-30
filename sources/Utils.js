@@ -104,7 +104,23 @@ var Utils = {
       css.appendChild( document.createTextNode( stylesheet ) );
 
     document.getElementsByTagName('head')[0].appendChild( css );
+  },
+
+
+  /**
+   * Globally evaluates a JavaScript code.
+   * @param  {String} code JS source code to evaluate
+   *
+   * @private
+   */
+  globalEvalJavascript: function( scriptNode ) {
+    var script = document.createElement( 'script' );
+    script.text = scriptNode.innerHTML;
+    script.src = scriptNode.src;
+    script.async = scriptNode.async;
+    document.getElementsByTagName('head')[0].appendChild( script ).parentNode.removeChild( script );
   }
+
 };
 
 
